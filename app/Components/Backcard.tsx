@@ -1,6 +1,15 @@
-import { Button, Linking, StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from "react-native";
 import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { color } from "../Constants/AppTheme";
 
 interface backSide {
   description: string;
@@ -25,10 +34,12 @@ const clearAll = async () => {
 };
 const Backcard: React.FC<backSideDataCombined> = (props) => {
   const { description, url, source } = props.data;
-
+  const colorScheme = useColorScheme();
+  console.log("Mode is ", colorScheme);
+  const theme = colorScheme === "dark" ? color.light : color.dark;
   return (
     <View style={{ padding: 10 }}>
-      <View style={styles.cardStyle}>
+      <View style={[styles.cardStyle, { backgroundColor: theme.SeconDaryBG }]}>
         <View style={{ justifyContent: "flex-start" }}>
           <Text style={{ fontSize: 18, color: "black" }}>{description}</Text>
           <Text style={{ fontSize: 15, color: "black", paddingTop: 25 }}>
@@ -36,18 +47,23 @@ const Backcard: React.FC<backSideDataCombined> = (props) => {
           </Text>
         </View>
         <View style={{ padding: 25 }}></View>
-        <Button
-          title="Read in detail"
+        <TouchableOpacity
           onPress={() => {
             Linking.openURL(url);
           }}
-        />
-        <Button
+        >
+          <View
+            style={[styles.DetailButton, { backgroundColor: theme.accent }]}
+          >
+            <Text>Read in detail</Text>
+          </View>
+        </TouchableOpacity>
+        {/* <Button
           title="Clear it "
           onPress={() => {
             clearAll();
           }}
-        />
+        /> */}
       </View>
     </View>
   );
@@ -67,8 +83,12 @@ const styles = StyleSheet.create({
     alignContent: "center",
     height: 550,
     elevation: 25,
-    backgroundColor: "#C4F0B9",
     borderRadius: 15,
     shadowOpacity: 0.3,
+  },
+  DetailButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 15,
   },
 });

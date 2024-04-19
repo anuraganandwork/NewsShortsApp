@@ -5,9 +5,11 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   Modal,
   Linking,
+  useColorScheme,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
@@ -21,6 +23,7 @@ import MyBottomSheet from "../Components/MyBottomSheet";
 import MyElevatedButton from "../Components/MyElevatedButton";
 import MySnackbar from "../Components/MySnackbar";
 import Savednewsblock from "../Components/Savednewsblock";
+import { color } from "../Constants/AppTheme";
 
 const Business = () => {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
@@ -30,7 +33,8 @@ const Business = () => {
 
   const [titleFromDatabase, setTitleFromDatabase] = useState({});
   const [isSnackbarVisible, setIsSnackbarVisible] = useState(false);
-
+  const colorScheme = useColorScheme();
+  const theme = colorScheme === "dark" ? color.light : color.dark;
   const showBottomSheet = () => {
     setIsBottomSheetVisible(true);
     //console.log("Hello Anurag");
@@ -79,7 +83,7 @@ const Business = () => {
   };
 
   return (
-    <View>
+    <View style={{ backgroundColor: theme.primary }}>
       <FlatList
         data={newsdataH}
         //item hmne random diya hai
@@ -107,12 +111,15 @@ const Business = () => {
           setIsModalVisible(true);
           getData();
         }}
-        style={{ position: "absolute", bottom: 20, right: 20 }}
+        style={{ position: "absolute", bottom: "13%", right: "5%" }}
       >
-        <View style={styles.savedButtonView}>
-          <View style={styles.savedButton}>
-            <Text>Saved News</Text>
-          </View>
+        <View
+          style={[
+            styles.savedButtonView,
+            { backgroundColor: theme.secondary, borderColor: theme.accent },
+          ]}
+        >
+          <Text>Saved News</Text>
         </View>
       </Pressable>
 
@@ -132,9 +139,50 @@ const Business = () => {
           <View
             style={{
               flex: 1,
+              backgroundColor: theme.primary,
             }}
           >
-            <Text>Hello people!</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingRight: "3%",
+              }}
+            >
+              <Text
+                style={{
+                  marginTop: "5%",
+                  fontSize: 25,
+                  fontWeight: 500,
+                  marginBottom: "2%",
+                  marginLeft: "2%",
+                }}
+              >
+                Saved news
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsModalVisible(false);
+                }}
+              >
+                <View
+                  style={{
+                    paddingVertical: 5,
+                    paddingHorizontal: 12,
+                    backgroundColor: theme.primary,
+                    borderColor: theme.accent,
+                    borderWidth: 1,
+                    elevation: 10,
+                    borderRadius: 50,
+                    marginTop: "5%",
+                  }}
+                >
+                  <Text>Close</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
             <FlatList
               data={titleFromDatabase}
               renderItem={({ item }) => {
@@ -148,13 +196,6 @@ const Business = () => {
                   />
                 );
               }}
-            />
-
-            <Button
-              onPress={() => {
-                setIsModalVisible(false);
-              }}
-              title="Close"
             />
           </View>
         </View>
@@ -171,9 +212,12 @@ const styles = StyleSheet.create({
     width: 75,
     borderRadius: 50,
     elevation: 20,
-    backgroundColor: "blue",
     justifyContent: "center",
     alignItems: "center",
+    position: "absolute",
+    bottom: "50%",
+    right: "10%",
+    borderWidth: 2,
   },
   savedButton: {
     position: "absolute",

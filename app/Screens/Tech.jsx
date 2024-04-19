@@ -5,9 +5,11 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   View,
   Modal,
   Pressable,
+  useColorScheme,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import FlipCard from "react-native-flip-card";
@@ -18,12 +20,15 @@ import MyBottomSheet from "../Components/MyBottomSheet";
 import Savednewsblock from "../Components/Savednewsblock";
 import CardForTech from "../Components/FrontCardTech";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { color } from "../Constants/AppTheme";
 
 const Tech = () => {
   const [newsdataH, setnewsdataH] = useState([]);
   const [isModalVisiblle, setIsModalVisible] = useState(false);
   const [titleFromDatabase, setTitleFromDatabase] = useState({});
-
+  const colorScheme = useColorScheme();
+  console.log("Mode'Health is ", colorScheme);
+  const theme = colorScheme === "dark" ? color.light : color.dark;
   let tempNews = [];
 
   const getData = async () => {
@@ -72,7 +77,7 @@ const Tech = () => {
   }, []);
 
   return (
-    <View>
+    <View style={{ backgroundColor: theme.primary }}>
       {/* <Button
         title="On"
         onPress={() => {
@@ -117,12 +122,15 @@ const Tech = () => {
           setIsModalVisible(true);
           getData();
         }}
-        style={{ position: "absolute", bottom: 20, right: 20 }}
+        style={{ position: "absolute", bottom: "13%", right: "5%" }}
       >
-        <View style={styles.savedButtonView}>
-          <View style={styles.savedButton}>
-            <Text>Saved News</Text>
-          </View>
+        <View
+          style={[
+            styles.savedButtonView,
+            { backgroundColor: theme.secondary, borderColor: theme.accent },
+          ]}
+        >
+          <Text>Saved News</Text>
         </View>
       </Pressable>
 
@@ -156,8 +164,54 @@ const Tech = () => {
           </View>
         </View> */}
 
-        <View style={{ justifyContent: "flex-end", flex: 1 }}>
-          <Text>Hello people!</Text>
+        <View
+          style={{
+            justifyContent: "flex-end",
+            flex: 1,
+            backgroundColor: theme.primary,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingRight: "3%",
+            }}
+          >
+            <Text
+              style={{
+                marginTop: "5%",
+                fontSize: 25,
+                fontWeight: 500,
+                marginBottom: "2%",
+                marginLeft: "2%",
+              }}
+            >
+              Saved news
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setIsModalVisible(false);
+              }}
+            >
+              <View
+                style={{
+                  paddingVertical: 5,
+                  paddingHorizontal: 12,
+                  backgroundColor: theme.primary,
+                  borderColor: theme.accent,
+                  borderWidth: 1,
+                  elevation: 10,
+                  borderRadius: 50,
+                  marginTop: "5%",
+                }}
+              >
+                <Text>Close</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
 
           <FlatList
             data={titleFromDatabase}
@@ -173,12 +227,6 @@ const Tech = () => {
               );
             }}
           />
-          <Button
-            onPress={() => {
-              setIsModalVisible(false);
-            }}
-            title="Close"
-          />
         </View>
       </Modal>
     </View>
@@ -193,13 +241,11 @@ const styles = StyleSheet.create({
     width: 75,
     borderRadius: 50,
     elevation: 20,
-    backgroundColor: "blue",
     justifyContent: "center",
     alignItems: "center",
-  },
-  savedButton: {
     position: "absolute",
-    bottom: 20,
-    right: 20,
+    bottom: "20%",
+    right: "10%",
+    borderWidth: 2,
   },
 });

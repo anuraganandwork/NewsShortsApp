@@ -5,6 +5,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  useColorScheme,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -13,6 +14,7 @@ import MySnackbar from "./MySnackbar";
 import { Button } from "react-native-paper";
 import * as Speech from "expo-speech";
 import { shareNews } from "./SharingFeature";
+import { color } from "../Constants/AppTheme";
 
 export interface NewsCardItem {
   title: string;
@@ -42,7 +44,9 @@ const CardForSearch: React.FC<cardComponent> = (props) => {
   const [savedIcon, setSavedIcon] = useState(true);
   const [isSnackbarVisible, setIsSnackbarVisible] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-
+  const colorScheme = useColorScheme();
+  console.log("Mode is ", colorScheme);
+  const theme = colorScheme === "dark" ? color.light : color.dark;
   //again opening the data from network
   const _storeData = async (title: string, url: string, urlToImage: string) => {
     let tempNews = [];
@@ -84,7 +88,9 @@ const CardForSearch: React.FC<cardComponent> = (props) => {
 
   return (
     <View style={styles.cardStyle}>
-      <View style={styles.imageAndText}>
+      <View
+        style={[styles.imageAndText, { backgroundColor: theme.SeconDaryBG }]}
+      >
         <Image style={styles.imageStyle} source={{ uri: urlToImage }} />
         <Text
           style={{
@@ -93,6 +99,7 @@ const CardForSearch: React.FC<cardComponent> = (props) => {
             paddingTop: 15,
             paddingHorizontal: 10,
           }}
+          numberOfLines={6}
         >
           {content}
         </Text>
@@ -105,7 +112,7 @@ const CardForSearch: React.FC<cardComponent> = (props) => {
             {publishedAt.substring(0, 10)}
           </Text>
         </View>
-        <View style={styles.saveIcon}>
+        <View style={[styles.saveIcon, { backgroundColor: theme.accent }]}>
           <TouchableOpacity
             onPress={() => {
               console.log("Touchable pressed");
@@ -189,7 +196,7 @@ const styles = StyleSheet.create({
     // elevation: 5,
     width: "100%",
     //flex: 1,
-    height: 550,
+    height: 500,
     paddingHorizontal: 10,
     borderColor: "black",
     justifyContent: "flex-start",
@@ -214,9 +221,15 @@ const styles = StyleSheet.create({
 
   saveIcon: {
     position: "absolute",
-    right: 15,
-    bottom: 30,
+    right: "0%",
+    bottom: "0%",
     flexDirection: "row",
+    padding: "8%",
+    width: "45%",
+    borderBottomEndRadius: 15,
+    borderTopStartRadius: 15,
+    alignContent: "space-between",
+    justifyContent: "space-between",
   },
   pressebleStlye: {},
 });

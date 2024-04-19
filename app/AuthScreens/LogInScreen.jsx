@@ -6,6 +6,7 @@ import {
   TextInput,
   ActivityIndicator,
   Image,
+  useColorScheme,
 } from "react-native";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -14,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Redirect, router } from "expo-router";
 import app from "../../firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { color } from "../Constants/AppTheme";
 
 const LogInScreen = () => {
   const [email, setEmail] = useState("");
@@ -25,6 +27,9 @@ const LogInScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [checkValidEmail, setCheckValidEmail] = useState(false);
   const [checkPasswordValid, setPassWordValid] = useState(false);
+  const colorScheme = useColorScheme();
+  console.log("Mode is ", colorScheme);
+  const theme = colorScheme === "dark" ? color.light : color.dark;
   // setUser State
 
   const setUsersState = async (user) => {
@@ -90,59 +95,69 @@ const LogInScreen = () => {
     }
   };
   return (
-    <View>
-      <Text>Welcome to NewsShorts</Text>
-      <Text>Consume more in less time</Text>
+    <View style={[styles.container, { backgroundColor: theme.primary }]}>
+      <Text style={{ fontSize: 30, marginBottom: "10%" }}>
+        Welcome to NewsShorts
+      </Text>
+      <Text style={{ fontSize: 15, marginBottom: "20%", color: theme.accent }}>
+        Consume more in less time.
+      </Text>
       <TextInput
-        style={{
-          height: 40,
-          borderColor: "gray",
-          borderWidth: 1,
-          marginBottom: 10,
-        }}
+        style={[styles.generalTextfieldStyle, { borderColor: theme.tertiary }]}
         placeholder="Enter email"
         value={email}
         onChangeText={(text) => handleEmailChecker(text)}
       />
-      {checkValidEmail ? <Text>Not an valid email!</Text> : <Text></Text>}
-
-      <TextInput
-        style={{
-          height: 40,
-          borderColor: "gray",
-          borderWidth: 1,
-          marginBottom: 10,
-        }}
-        placeholder="Enter password"
-        secureTextEntry={seePassword}
-        value={password}
-        onChangeText={(text) => handlePasswordChecker(text)}
-      />
-      {seePassword ? (
-        <TouchableOpacity
-          onPress={() => {
-            setSeePassword(!seePassword);
-          }}
-        >
-          <Image
-            source={require("../../assets/invisible.png")}
-            style={{ height: 25, width: 25 }}
-          />
-        </TouchableOpacity>
+      {checkValidEmail ? (
+        <Text style={styles.cautionStyle}>Not an valid email!</Text>
       ) : (
-        <TouchableOpacity
-          onPress={() => {
-            setSeePassword(!seePassword);
-          }}
-        >
-          <Image
-            source={require("../../assets/visible.png")}
-            style={{ height: 25, width: 25 }}
-          />
-        </TouchableOpacity>
+        <Text></Text>
       )}
+      <View
+        style={[
+          {
+            flexDirection: "row",
+            alignContent: "space-between",
+            width: "100%",
+          },
+        ]}
+      >
+        <TextInput
+          style={[
+            styles.generalTextfieldStyle,
+            { borderColor: theme.tertiary },
+          ]}
+          placeholder="Enter password"
+          secureTextEntry={seePassword}
+          value={password}
+          onChangeText={(text) => handlePasswordChecker(text)}
+        />
+        {seePassword ? (
+          <TouchableOpacity
+            onPress={() => {
+              setSeePassword(!seePassword);
+            }}
+          >
+            <Image
+              source={require("../../assets/invisible.png")}
+              style={[styles.iconEye, { borderColor: theme.tertiary }]}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              setSeePassword(!seePassword);
+            }}
+          >
+            <Image
+              source={require("../../assets/visible.png")}
+              style={[styles.iconEye, { color: theme.tertiary }]}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
       {checkPasswordValid ? (
-        <Text>
+        <Text style={styles.cautionStyle}>
           Password should contain atleast one uppercase letter, one lowercase
           letter, and one number
         </Text>
@@ -155,7 +170,7 @@ const LogInScreen = () => {
           handleLogIn(auth, email, password);
         }}
       >
-        <View style={{ backgroundColor: "black", padding: 10 }}>
+        <View style={[styles.buttonStyle, { backgroundColor: theme.accent }]}>
           <Text style={{ color: "white" }}>Log in</Text>
         </View>
       </TouchableOpacity>
@@ -167,7 +182,7 @@ const LogInScreen = () => {
             router.navigate("./SignUpScreen");
           }}
         >
-          <Text style={{ color: "blue" }}>Sign in</Text>
+          <Text style={{ color: theme.accent }}>Sign in</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -176,4 +191,36 @@ const LogInScreen = () => {
 
 export default LogInScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "5%",
+  },
+  generalTextfieldStyle: {
+    width: "100%",
+    borderBottomWidth: 1,
+    paddingBottom: "8%",
+  },
+  iconEye: {
+    position: "absolute",
+    top: "30%",
+    right: "5%",
+    height: 25,
+    width: 25,
+    opacity: 0.5,
+  },
+  buttonStyle: {
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    backgroundColor: "black",
+    borderRadius: 10,
+    marginTop: "10%",
+    marginBottom: "5%",
+  },
+  cautionStyle: {
+    color: "red",
+    fontSize: 12,
+  },
+});

@@ -7,9 +7,9 @@ const baseurl = "https://newsapi.org/v2";
 // };
 const FetchNewHome = async () => {
   const response = await axios({
-    //method: "GET",
-    // url: `${baseurl}/top-headlines?country=in&apiKey=c4d0e1a6021549cc927dfdd126384be5
-    //`,
+    method: "GET",
+    url: `${baseurl}/top-headlines?country=in&apiKey=c4d0e1a6021549cc927dfdd126384be5
+    `,
   });
 
   console.log(response.data.articles[0].title);

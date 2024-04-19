@@ -1,10 +1,29 @@
-import { Pressable, StyleSheet, Text, View, Image } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  useColorScheme,
+  TouchableOpacity,
+} from "react-native";
 import React from "react";
+import { color } from "../Constants/AppTheme";
 
 const Savednewsblock = ({ title, url, onDelete, onRead, urlToImage }) => {
+  const colorScheme = useColorScheme();
+  console.log("Mode is ", colorScheme);
+  const theme = colorScheme === "dark" ? color.light : color.dark;
+  // setUser State
   return (
-    <View style={styles.cardStyle}>
-      <View style={{ justifyContent: "flex-end" }}>
+    <View style={[styles.cardStyle]}>
+      <View
+        style={{
+          justifyContent: "flex-end",
+          backgroundColor: theme.SeconDaryBG,
+          borderRadius: 10,
+        }}
+      >
         <View
           style={{
             flexDirection: "row",
@@ -40,19 +59,19 @@ const Savednewsblock = ({ title, url, onDelete, onRead, urlToImage }) => {
           </View>
         </View>
         <View style={styles.buttonrow}>
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               onRead();
             }}
-            style={styles.buttonStyle}
+            style={[styles.buttonStyle, { backgroundColor: theme.accent }]}
           >
             <Text style={{ color: "white" }}>Read</Text>
-          </Pressable>
+          </TouchableOpacity>
           <Pressable
             onPress={() => {
               onDelete();
             }}
-            style={styles.buttonStyleSecondary}
+            style={[styles.buttonStyleSecondary, { borderColor: theme.accent }]}
           >
             <Text>Delete</Text>
           </Pressable>
@@ -66,12 +85,13 @@ export default Savednewsblock;
 
 const styles = StyleSheet.create({
   cardStyle: {
-    backgroundColor: "#C0C0C0",
     //paddingHorizontal: 15,
     //paddingTop: 15,
     //paddingBottom: 10,
     margin: 10,
     borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 12,
   },
   buttonrow: {
     flexDirection: "row",

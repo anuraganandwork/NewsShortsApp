@@ -7,7 +7,9 @@ import {
   Keyboard,
   ActivityIndicator,
   Image,
+  useColorScheme,
 } from "react-native";
+
 import React, { useEffect, useState } from "react";
 import { Link, Redirect, router } from "expo-router";
 import {
@@ -22,6 +24,7 @@ import Home from "../Screens/Home";
 import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import isEmailValid from "../Components/EmailChecker";
+import { color } from "../Constants/AppTheme";
 import("../Components/EmailChecker").TypeOfEmail;
 //import { useNavigation } from "@react-navigation/native";
 //rimport ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
@@ -38,7 +41,10 @@ const SignUpScreen = () => {
   const auth = getAuth(app);
   const navigation = useNavigation();
 
-  //set user
+  //set userr
+  const colorScheme = useColorScheme();
+  console.log("Mode is ", colorScheme);
+  const theme = colorScheme === "dark" ? color.light : color.dark;
   const setUsersState = async (user) => {
     try {
       await AsyncStorage.setItem("USERDATA", JSON.stringify(user));
@@ -106,29 +112,27 @@ const SignUpScreen = () => {
     }
   };
   return (
-    <View>
-      <Text>Welcome to NewsShorts</Text>
-      <Text>Consume more in less time</Text>
+    <View style={[styles.container, { backgroundColor: theme.primary }]}>
+      <Text style={{ fontSize: 30, marginBottom: "10%" }}>
+        Welcome to NewsShorts
+      </Text>
+      <Text style={{ fontSize: 15, marginBottom: "10%", color: theme.accent }}>
+        Consume more in less time.
+      </Text>
 
       <TextInput
-        style={{
-          height: 40,
-          borderColor: "gray",
-          borderWidth: 1,
-          marginBottom: 10,
-        }}
+        style={[styles.generalTextfieldStyle, { borderColor: theme.tertiary }]}
         placeholder="Enter your name"
         value={nameOfUser}
         onChangeText={(text) => handleUserName(text)}
       />
-      {isUserNameValid ? <Text>Not a valid user name!</Text> : <Text></Text>}
+      {isUserNameValid ? (
+        <Text style={styles.cautionStyle}>Not a valid user name!</Text>
+      ) : (
+        <Text></Text>
+      )}
       <TextInput
-        style={{
-          height: 40,
-          borderColor: "gray",
-          borderWidth: 1,
-          marginBottom: 10,
-        }}
+        style={[styles.generalTextfieldStyle, { borderColor: theme.tertiary }]}
         placeholder="Enter email"
         value={email}
         onChangeText={(text) => {
@@ -136,46 +140,56 @@ const SignUpScreen = () => {
           handleEmailChecker(text);
         }}
       />
-      {checkValidEmail ? <Text>Not an valid email!</Text> : <Text></Text>}
-
-      <TextInput
-        style={{
-          height: 40,
-          borderColor: "gray",
-          borderWidth: 1,
-          marginBottom: 10,
-        }}
-        placeholder="Enter password"
-        secureTextEntry={seePassword}
-        value={password}
-        onChangeText={(text) => handlePasswordChecker(text)}
-      />
-      {seePassword ? (
-        <TouchableOpacity
-          onPress={() => {
-            setSeePassword(!seePassword);
-          }}
-        >
-          <Image
-            source={require("../../assets/invisible.png")}
-            style={{ height: 25, width: 25 }}
-          />
-        </TouchableOpacity>
+      {checkValidEmail ? (
+        <Text style={styles.cautionStyle}>Not an valid email!</Text>
       ) : (
-        <TouchableOpacity
-          onPress={() => {
-            setSeePassword(!seePassword);
-          }}
-        >
-          <Image
-            source={require("../../assets/visible.png")}
-            style={{ height: 25, width: 25 }}
-          />
-        </TouchableOpacity>
+        <Text></Text>
       )}
-
+      <View
+        style={[
+          {
+            flexDirection: "row",
+            alignContent: "space-between",
+            width: "100%",
+          },
+        ]}
+      >
+        <TextInput
+          style={[
+            styles.generalTextfieldStyle,
+            { borderColor: theme.tertiary },
+          ]}
+          placeholder="Enter password"
+          secureTextEntry={seePassword}
+          value={password}
+          onChangeText={(text) => handlePasswordChecker(text)}
+        />
+        {seePassword ? (
+          <TouchableOpacity
+            onPress={() => {
+              setSeePassword(!seePassword);
+            }}
+          >
+            <Image
+              source={require("../../assets/invisible.png")}
+              style={styles.iconEye}
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              setSeePassword(!seePassword);
+            }}
+          >
+            <Image
+              source={require("../../assets/visible.png")}
+              style={styles.iconEye}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
       {checkPasswordValid ? (
-        <Text>
+        <Text style={styles.cautionStyle}>
           Password should contain atleast one uppercase letter, one lowercase
           letter, and one number
         </Text>
@@ -188,7 +202,7 @@ const SignUpScreen = () => {
           handleSignIn(auth, email, password, nameOfUser);
         }}
       >
-        <View style={{ backgroundColor: "black", padding: 10 }}>
+        <View style={[styles.buttonStyle, { backgroundColor: theme.accent }]}>
           <Text style={{ color: "white" }}>Sign up</Text>
         </View>
       </TouchableOpacity>
@@ -200,7 +214,7 @@ const SignUpScreen = () => {
             router.navigate("./LogInScreen");
           }}
         >
-          <Text style={{ color: "blue" }}>Log in</Text>
+          <Text style={{ color: theme.accent }}>Log in</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -209,4 +223,36 @@ const SignUpScreen = () => {
 
 export default SignUpScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "5%",
+  },
+  generalTextfieldStyle: {
+    width: "100%",
+    borderBottomWidth: 1,
+    paddingBottom: "8%",
+  },
+  iconEye: {
+    position: "absolute",
+    top: "40   %",
+    right: "5%",
+    height: 25,
+    width: 25,
+    opacity: 0.5,
+  },
+  buttonStyle: {
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    backgroundColor: "black",
+    borderRadius: 10,
+    marginTop: "10%",
+    marginBottom: "5%",
+  },
+  cautionStyle: {
+    color: "red",
+    fontSize: 12,
+  },
+});

@@ -8,7 +8,9 @@ import {
   TextInput,
   View,
   Pressable,
+  TouchableOpacity,
   Modal,
+  useColorScheme,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -17,13 +19,17 @@ import CardForSearch, { NewsCardItem } from "../Components/FrontCardSearch";
 import Backcard from "../Components/Backcard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Savednewsblock from "../Components/Savednewsblock";
+import { color } from "../Constants/AppTheme";
+
 const Search = () => {
   const [searched, setSearched] = useState("");
   const [NewsData, setNewsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisiblle, setIsModalVisible] = useState(false);
   const [titleFromDatabase, setTitleFromDatabase] = useState({});
-
+  const colorScheme = useColorScheme();
+  console.log("Mode is ", colorScheme);
+  const theme = colorScheme === "dark" ? color.light : color.dark;
   const fetchSearchedNews = async (searchedTopic) => {
     const response = await axios({
       method: "GET",
@@ -103,10 +109,10 @@ const Search = () => {
     );
   };
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.primary }}>
       <View style={{}}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { borderColor: theme.accent }]}
           placeholder={"Search topic"}
           onChangeText={setSearched}
           value={searched}
@@ -140,48 +146,59 @@ const Search = () => {
       {NewsData.length > 0 ? (
         <View style={{ flex: 1 }}>
           <FlatList data={NewsData} renderItem={_renderItem} />
-          <View>
+          {/* <View>
             <Pressable
               onPress={() => {
                 setIsModalVisible(true);
                 getData();
               }}
-              style={{ position: "absolute", bottom: 20, right: 20 }}
+              style={{ position: "absolute", bottom: "2%", right: "5%" }}
             >
-              <View style={styles.savedButtonView}>
-                <View style={styles.savedButton}>
-                  <Text>Saved News</Text>
-                </View>
+              <View
+                style={[
+                  styles.savedButtonView,
+                  {
+                    backgroundColor: theme.secondary,
+                    borderColor: theme.accent,
+                  },
+                ]}
+              >
+                <Text>Saved News</Text>
               </View>
             </Pressable>
-          </View>
+          </View> */}
         </View>
       ) : (
         <View></View>
       )}
 
       {isLoading ? (
-        <View>
-          <Text>Loading</Text>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text>Loading...</Text>
         </View>
       ) : (
         <View></View>
       )}
-      <View>
+      <View style={{ position: "absolute", bottom: "13%", right: "5%" }}>
         <Pressable
           onPress={() => {
             setIsModalVisible(true);
             getData();
           }}
-          style={{ position: "absolute", top: 405, right: 20 }}
         >
-          <View style={styles.savedButtonView}>
-            <View style={styles.savedButton}>
-              <Text>Saved News</Text>
-            </View>
+          <View
+            style={[
+              styles.savedButtonView,
+              { backgroundColor: theme.secondary, borderColor: theme.accent },
+            ]}
+          >
+            <Text>Saved News</Text>
           </View>
         </Pressable>
       </View>
+
       <Modal
         visible={isModalVisiblle}
         onRequestClose={() => {
@@ -212,8 +229,54 @@ const Search = () => {
           </View>
         </View> */}
 
-        <View style={{ justifyContent: "flex-end", flex: 1 }}>
-          <Text>Hello people!</Text>
+        <View
+          style={{
+            justifyContent: "flex-end",
+            flex: 1,
+            backgroundColor: theme.primary,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingRight: "3%",
+            }}
+          >
+            <Text
+              style={{
+                marginTop: "5%",
+                fontSize: 25,
+                fontWeight: 500,
+                marginBottom: "2%",
+                marginLeft: "2%",
+              }}
+            >
+              Saved news
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setIsModalVisible(false);
+              }}
+            >
+              <View
+                style={{
+                  paddingVertical: 5,
+                  paddingHorizontal: 12,
+                  backgroundColor: theme.primary,
+                  borderColor: theme.accent,
+                  borderWidth: 1,
+                  elevation: 10,
+                  borderRadius: 50,
+                  marginTop: "5%",
+                }}
+              >
+                <Text>Close</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
 
           <FlatList
             data={titleFromDatabase}
@@ -231,12 +294,6 @@ const Search = () => {
               );
             }}
           />
-          <Button
-            onPress={() => {
-              setIsModalVisible(false);
-            }}
-            title="Close"
-          />
         </View>
       </Modal>
     </View>
@@ -247,9 +304,7 @@ export default Search;
 
 const styles = StyleSheet.create({
   input: {
-    backgroundColor: "#f0f0f0",
-    borderColor: "#ccc",
-    borderWidth: 2,
+    borderBottomWidth: 1,
     borderRadius: 8,
     margin: 10,
     marginTop: 25,
@@ -260,13 +315,9 @@ const styles = StyleSheet.create({
     width: 75,
     borderRadius: 50,
     elevation: 20,
-    backgroundColor: "blue",
     justifyContent: "center",
     alignItems: "center",
-  },
-  savedButton: {
-    position: "absolute",
-    bottom: 10,
-    right: 20,
+
+    borderWidth: 2,
   },
 });
