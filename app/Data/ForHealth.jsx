@@ -1,10 +1,12 @@
 import axios from "axios";
+import { health } from "../../apiKeys";
+
 const baseurl = "https://newsapi.org/v2";
 
 const FetchNewHealth = async () => {
   const response = await axios({
     method: "GET",
-    url: `https://newsapi.org/v2/everything?q=health&apiKey=c4d0e1a6021549cc927dfdd126384be5`,
+    url: health,
   });
 
   console.log(response.data.articles[8].title);

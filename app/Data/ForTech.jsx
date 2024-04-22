@@ -1,4 +1,6 @@
 import axios from "axios";
+import { tech } from "../../apiKeys";
+
 const baseurl = "https://newsapi.org/v2";
 
 // export type newsDataFRomNetwork = {
@@ -8,8 +10,7 @@ const baseurl = "https://newsapi.org/v2";
 const FetchNewtech = async () => {
   const response = await axios({
     method: "GET",
-    url: `https://newsapi.org/v2/everything?q=technology&apiKey=c4d0e1a6021549cc927dfdd126384be5
-  `,
+    url: tech,
   });
 
   console.log(response.data.articles[0].title);

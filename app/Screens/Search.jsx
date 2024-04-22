@@ -13,6 +13,7 @@ import {
   Linking,
   useColorScheme,
 } from "react-native";
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import FlipCard from "react-native-flip-card";
@@ -22,6 +23,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Savednewsblock from "../Components/Savednewsblock";
 import { color } from "../Constants/AppTheme";
 import LottieView from "lottie-react-native";
+import { searchKey, searchUrl } from "../../apiKeys";
 
 const Search = () => {
   const [searched, setSearched] = useState("");
@@ -35,8 +37,7 @@ const Search = () => {
   const fetchSearchedNews = async (searchedTopic) => {
     const response = await axios({
       method: "GET",
-      url: `https://newsapi.org/v2/everything?q=${searchedTopic}&apiKey=c4d0e1a6021549cc927dfdd126384be5
-      `,
+      url: `${searchUrl}q=${searchedTopic}&apiKey=${searchKey}`,
     });
     //console.log(response.data);
     return response.data.articles;
