@@ -96,7 +96,6 @@ const CardForHome: React.FC<cardComponent> = (props) => {
             color: "black",
             paddingTop: 15,
             paddingHorizontal: 10,
-            fontFamily: "Helvetica Neue",
           }}
           numberOfLines={6}
         >

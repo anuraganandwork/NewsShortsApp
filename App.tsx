@@ -1,3 +1,5 @@
+//require("dotenv").config();
+
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import "react-native-gesture-handler";

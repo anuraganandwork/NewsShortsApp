@@ -1,4 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
+// require("dotenv").config();r
+
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Redirect } from "expo-router";
 import Splashscreen from "./SplashScreen/Splashscreen";
@@ -8,15 +10,16 @@ const index = () => {
   //return <Redirect href="/Screens/Home" />;
   const [isSplashVisible, setSplashVisible] = useState(true);
   const [userFromDb, setUserToDb] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   //fetch data
   const fetchUser = async () => {
+    setIsLoading(true);
     try {
       const fetchedData = await AsyncStorage.getItem("USERDATA");
       if (fetchedData) {
         try {
-          const x = JSON.parse(fetchedData);
-          setUserToDb(x);
+          await setUserToDb(JSON.parse(fetchedData));
+          setIsLoading(false);
         } catch (e) {
           console.log("Error in fetching from your data ", e);
         }
@@ -28,9 +31,7 @@ const index = () => {
     }
   };
   useEffect(() => {
-    fetchUser().then(() => {
-      console.log("Fetching", JSON.stringify(userFromDb)); // Stringify the object
-    });
+    fetchUser();
     setTimeout(() => {
       setSplashVisible(false);
     }, 5000);

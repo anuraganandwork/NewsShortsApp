@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Image,
   useColorScheme,
+  ScrollView,
 } from "react-native";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -16,6 +17,7 @@ import { Link, Redirect, router } from "expo-router";
 import app from "../../firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { color } from "../Constants/AppTheme";
+import LottieView from "lottie-react-native";
 
 const LogInScreen = () => {
   const [email, setEmail] = useState("");
@@ -70,8 +72,24 @@ const LogInScreen = () => {
 
   if (isLoading === true) {
     return (
-      <View style={{ backgroundColor: "white" }}>
-        <ActivityIndicator size="large" color="black" />
+      <View
+        style={{
+          backgroundColor: theme.SeconDaryBG,
+          height: "100%",
+          width: "100%",
+          justifyContent: "center",
+          alignContent: "center",
+        }}
+      >
+        <LottieView
+          autoPlay={true}
+          style={{
+            width: "100%",
+            height: "40%",
+          }}
+          // Find more Lottie files at https://lottiefiles.com/featured
+          source={require("../../assets/searchAnimation.json")}
+        />
       </View>
     );
   }
@@ -95,97 +113,146 @@ const LogInScreen = () => {
     }
   };
   return (
-    <View style={[styles.container, { backgroundColor: theme.primary }]}>
-      <Text style={{ fontSize: 30, marginBottom: "10%" }}>
-        Welcome to NewsShorts
-      </Text>
-      <Text style={{ fontSize: 15, marginBottom: "20%", color: theme.accent }}>
-        Consume more in less time.
-      </Text>
-      <TextInput
-        style={[styles.generalTextfieldStyle, { borderColor: theme.tertiary }]}
-        placeholder="Enter email"
-        value={email}
-        onChangeText={(text) => handleEmailChecker(text)}
-      />
-      {checkValidEmail ? (
-        <Text style={styles.cautionStyle}>Not an valid email!</Text>
-      ) : (
-        <Text></Text>
-      )}
+    <ScrollView style={[styles.container, { backgroundColor: theme.primary }]}>
       <View
-        style={[
-          {
-            flexDirection: "row",
-            alignContent: "space-between",
-            width: "100%",
-          },
-        ]}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          width: "100%",
+        }}
       >
+        <Text
+          style={{
+            fontSize: 30,
+            marginBottom: "1%",
+            justifyContent: "center",
+            marginHorizontal: "10%",
+            marginTop: "15%",
+          }}
+        >
+          Welcome
+        </Text>
+        <Text
+          style={{
+            fontSize: 30,
+            marginBottom: "1%",
+            justifyContent: "center",
+            marginHorizontal: "10%",
+            marginTop: "1%",
+          }}
+        >
+          to
+        </Text>
+        <Text
+          style={{
+            fontSize: 30,
+            marginBottom: "10%",
+            justifyContent: "center",
+            marginHorizontal: "10%",
+            marginTop: "1%",
+          }}
+        >
+          News Shorts
+        </Text>
+        <Text
+          style={{ fontSize: 15, marginBottom: "20%", color: theme.accent }}
+        >
+          Consume more in less time.
+        </Text>
         <TextInput
           style={[
             styles.generalTextfieldStyle,
             { borderColor: theme.tertiary },
           ]}
-          placeholder="Enter password"
-          secureTextEntry={seePassword}
-          value={password}
-          onChangeText={(text) => handlePasswordChecker(text)}
+          placeholder="Enter email"
+          value={email}
+          onChangeText={(text) => handleEmailChecker(text)}
         />
-        {seePassword ? (
-          <TouchableOpacity
-            onPress={() => {
-              setSeePassword(!seePassword);
-            }}
-          >
-            <Image
-              source={require("../../assets/invisible.png")}
-              style={[styles.iconEye, { borderColor: theme.tertiary }]}
-            />
-          </TouchableOpacity>
+        {checkValidEmail ? (
+          <Text style={styles.cautionStyle}>Not an valid email!</Text>
         ) : (
-          <TouchableOpacity
-            onPress={() => {
-              setSeePassword(!seePassword);
-            }}
-          >
-            <Image
-              source={require("../../assets/visible.png")}
-              style={[styles.iconEye, { color: theme.tertiary }]}
-            />
-          </TouchableOpacity>
+          <Text></Text>
         )}
-      </View>
-      {checkPasswordValid ? (
-        <Text style={styles.cautionStyle}>
-          Password should contain atleast one uppercase letter, one lowercase
-          letter, and one number
-        </Text>
-      ) : (
-        <Text></Text>
-      )}
-
-      <TouchableOpacity
-        onPress={() => {
-          handleLogIn(auth, email, password);
-        }}
-      >
-        <View style={[styles.buttonStyle, { backgroundColor: theme.accent }]}>
-          <Text style={{ color: "white" }}>Log in</Text>
+        <View
+          style={[
+            {
+              flexDirection: "row",
+              alignContent: "space-between",
+              width: "100%",
+            },
+          ]}
+        >
+          <TextInput
+            style={[
+              styles.generalTextfieldStyle,
+              { borderColor: theme.tertiary },
+            ]}
+            placeholder="Enter password"
+            secureTextEntry={seePassword}
+            value={password}
+            onChangeText={(text) => handlePasswordChecker(text)}
+          />
+          {seePassword ? (
+            <TouchableOpacity
+              onPress={() => {
+                setSeePassword(!seePassword);
+              }}
+            >
+              <Image
+                source={require("../../assets/invisible.png")}
+                style={[styles.iconEye, { borderColor: theme.tertiary }]}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                setSeePassword(!seePassword);
+              }}
+            >
+              <Image
+                source={require("../../assets/visible.png")}
+                style={[styles.iconEye, { color: theme.tertiary }]}
+              />
+            </TouchableOpacity>
+          )}
         </View>
-      </TouchableOpacity>
+        {checkPasswordValid ? (
+          <Text style={styles.cautionStyle}>
+            Password should contain atleast one uppercase letter, one lowercase
+            letter, and one number
+          </Text>
+        ) : (
+          <Text></Text>
+        )}
 
-      <View style={{ flexDirection: "row", padding: 10 }}>
-        <Text>Already a user? </Text>
         <TouchableOpacity
           onPress={() => {
-            router.navigate("./SignUpScreen");
+            if (password.length > 1 && email.length > 1) {
+              handleLogIn(auth, email, password);
+            } else {
+              alert("Not a valid entry!");
+            }
           }}
         >
-          <Text style={{ color: theme.accent }}>Sign in</Text>
+          <View style={[styles.buttonStyle, { backgroundColor: theme.accent }]}>
+            <Text style={{ color: "white" }}>Log in</Text>
+          </View>
         </TouchableOpacity>
+
+        <View style={{ flexDirection: "row", padding: 10 }}>
+          <Text>Already a user? </Text>
+          <TouchableOpacity
+            onPress={() => {
+              router.navigate("./SignUpScreen");
+            }}
+          >
+            <Text style={{ color: theme.accent }}>Sign in</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -194,8 +261,8 @@ export default LogInScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    height: "100%",
+    width: "100%",
     padding: "5%",
   },
   generalTextfieldStyle: {

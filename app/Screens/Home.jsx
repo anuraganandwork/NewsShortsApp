@@ -32,7 +32,7 @@ const Home = () => {
   const getData = async () => {
     try {
       const _savedNews = await AsyncStorage.getItem("SAVEDNEWSFORHOME");
-      setTitleFromDatabase(JSON.parse(_savedNews));
+      await setTitleFromDatabase(JSON.parse(_savedNews));
       tempNews = JSON.parse(_savedNews);
       // console.log(JSON.parse(_savedNews));
       //console.log(tempNews);
@@ -99,7 +99,7 @@ const Home = () => {
           </FlipCard>
         )}
       />
-      <Pressable
+      <TouchableOpacity
         onPress={() => {
           setIsModalVisible(true);
           getData();
@@ -114,7 +114,7 @@ const Home = () => {
         >
           <Text>Saved News</Text>
         </View>
-      </Pressable>
+      </TouchableOpacity>
 
       <Modal
         visible={isModalVisiblle}

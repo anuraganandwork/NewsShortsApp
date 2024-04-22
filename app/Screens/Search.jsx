@@ -10,6 +10,7 @@ import {
   Pressable,
   TouchableOpacity,
   Modal,
+  Linking,
   useColorScheme,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -20,6 +21,7 @@ import Backcard from "../Components/Backcard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Savednewsblock from "../Components/Savednewsblock";
 import { color } from "../Constants/AppTheme";
+import LottieView from "lottie-react-native";
 
 const Search = () => {
   const [searched, setSearched] = useState("");
@@ -118,6 +120,7 @@ const Search = () => {
           value={searched}
           multiline={false}
           onSubmitEditing={() => {
+            setNewsData([]);
             setIsLoading(true);
             Keyboard.dismiss;
             console.log(searched);
@@ -174,9 +177,23 @@ const Search = () => {
 
       {isLoading ? (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          <Text>Loading...</Text>
+          <LottieView
+            autoPlay={true}
+            speed={1}
+            style={{
+              width: "100%",
+              height: "20%",
+              padding: 20,
+            }}
+            // Find more Lottie files at https://lottiefiles.com/featured
+            source={require("../../assets/loadingAnimation.json")}
+          />
         </View>
       ) : (
         <View></View>

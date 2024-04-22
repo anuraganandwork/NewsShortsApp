@@ -32,13 +32,14 @@ const Splashscreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.SeconDaryBG }]}>
       <LottieView
         autoPlay={true}
+        speed={1.5}
         style={{
-          width: 300,
-          height: 300,
-          backgroundColor: "#ffffff",
+          width: "100%",
+          height: "70%",
+          opacity: 1,
         }}
         // Find more Lottie files at https://lottiefiles.com/featured
         source={require("./second.json")}
@@ -46,6 +47,9 @@ const Splashscreen = () => {
       <Text style={{ fontWeight: "bold", fontSize: 22, color: theme.accent }}>
         News Shorts
       </Text>
+      {/* <View
+        style={{ backgroundColor: theme.SeconDaryBG, height: "30%" }}
+      ></View> */}
     </View>
   );
 };

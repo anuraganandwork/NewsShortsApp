@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Image,
   useColorScheme,
+  ScrollView,
 } from "react-native";
 
 import React, { useEffect, useState } from "react";
@@ -25,6 +26,7 @@ import { useNavigation } from "@react-navigation/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import isEmailValid from "../Components/EmailChecker";
 import { color } from "../Constants/AppTheme";
+import LottieView from "lottie-react-native";
 import("../Components/EmailChecker").TypeOfEmail;
 //import { useNavigation } from "@react-navigation/native";
 //rimport ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
@@ -78,8 +80,25 @@ const SignUpScreen = () => {
   };
   if (isLoading) {
     return (
-      <View style={{ backgroundColor: "white" }}>
-        <ActivityIndicator size="large" color="black" />
+      <View
+        style={{
+          backgroundColor: theme.SeconDaryBG,
+          height: "100%",
+          width: "100%",
+          justifyContent: "center",
+          alignContent: "center",
+        }}
+      >
+        <LottieView
+          autoPlay={true}
+          speed={2}
+          style={{
+            width: "100%",
+            height: "20%",
+          }}
+          // Find more Lottie files at https://lottiefiles.com/featured
+          source={require("../../assets/loadingAnimation.json")}
+        />
       </View>
     );
   }
@@ -103,7 +122,7 @@ const SignUpScreen = () => {
   };
 
   const handleUserName = (text) => {
-    const regex = /^[a-zA-Z0-9_]+$/;
+    const regex = /^[a-zA-Z0-9_ ]+$/;
     setNameOfUser(text);
     if (regex.test(text)) {
       setIsUsernameValid(false);
@@ -112,112 +131,169 @@ const SignUpScreen = () => {
     }
   };
   return (
-    <View style={[styles.container, { backgroundColor: theme.primary }]}>
-      <Text style={{ fontSize: 30, marginBottom: "10%" }}>
-        Welcome to NewsShorts
-      </Text>
-      <Text style={{ fontSize: 15, marginBottom: "10%", color: theme.accent }}>
-        Consume more in less time.
-      </Text>
-
-      <TextInput
-        style={[styles.generalTextfieldStyle, { borderColor: theme.tertiary }]}
-        placeholder="Enter your name"
-        value={nameOfUser}
-        onChangeText={(text) => handleUserName(text)}
-      />
-      {isUserNameValid ? (
-        <Text style={styles.cautionStyle}>Not a valid user name!</Text>
-      ) : (
-        <Text></Text>
-      )}
-      <TextInput
-        style={[styles.generalTextfieldStyle, { borderColor: theme.tertiary }]}
-        placeholder="Enter email"
-        value={email}
-        onChangeText={(text) => {
-          // setEmail(text);
-          handleEmailChecker(text);
-        }}
-      />
-      {checkValidEmail ? (
-        <Text style={styles.cautionStyle}>Not an valid email!</Text>
-      ) : (
-        <Text></Text>
-      )}
+    <ScrollView style={[styles.container, { backgroundColor: theme.primary }]}>
       <View
-        style={[
-          {
-            flexDirection: "row",
-            alignContent: "space-between",
-            width: "100%",
-          },
-        ]}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          width: "100%",
+        }}
       >
+        <Text
+          style={{
+            fontSize: 30,
+            marginBottom: "1%",
+            justifyContent: "center",
+            marginHorizontal: "10%",
+            marginTop: "15%",
+          }}
+        >
+          Welcome
+        </Text>
+        <Text
+          style={{
+            fontSize: 30,
+            marginBottom: "1%",
+            justifyContent: "center",
+            marginHorizontal: "10%",
+            marginTop: "1%",
+          }}
+        >
+          to
+        </Text>
+        <Text
+          style={{
+            fontSize: 30,
+            marginBottom: "10%",
+            justifyContent: "center",
+            marginHorizontal: "10%",
+            marginTop: "1%",
+          }}
+        >
+          News Shorts
+        </Text>
+
+        <Text
+          style={{ fontSize: 15, marginBottom: "10%", color: theme.accent }}
+        >
+          Consume more in less time.
+        </Text>
+
         <TextInput
           style={[
             styles.generalTextfieldStyle,
             { borderColor: theme.tertiary },
           ]}
-          placeholder="Enter password"
-          secureTextEntry={seePassword}
-          value={password}
-          onChangeText={(text) => handlePasswordChecker(text)}
+          placeholder="Enter your name"
+          value={nameOfUser}
+          onChangeText={(text) => handleUserName(text)}
         />
-        {seePassword ? (
-          <TouchableOpacity
-            onPress={() => {
-              setSeePassword(!seePassword);
-            }}
-          >
-            <Image
-              source={require("../../assets/invisible.png")}
-              style={styles.iconEye}
-            />
-          </TouchableOpacity>
+        {isUserNameValid ? (
+          <Text style={styles.cautionStyle}>Not a valid user name!</Text>
         ) : (
-          <TouchableOpacity
-            onPress={() => {
-              setSeePassword(!seePassword);
-            }}
-          >
-            <Image
-              source={require("../../assets/visible.png")}
-              style={styles.iconEye}
-            />
-          </TouchableOpacity>
+          <Text></Text>
         )}
-      </View>
-      {checkPasswordValid ? (
-        <Text style={styles.cautionStyle}>
-          Password should contain atleast one uppercase letter, one lowercase
-          letter, and one number
-        </Text>
-      ) : (
-        <Text></Text>
-      )}
-
-      <TouchableOpacity
-        onPress={() => {
-          handleSignIn(auth, email, password, nameOfUser);
-        }}
-      >
-        <View style={[styles.buttonStyle, { backgroundColor: theme.accent }]}>
-          <Text style={{ color: "white" }}>Sign up</Text>
+        <TextInput
+          style={[
+            styles.generalTextfieldStyle,
+            { borderColor: theme.tertiary },
+          ]}
+          placeholder="Enter email"
+          value={email}
+          onChangeText={(text) => {
+            // setEmail(text);
+            handleEmailChecker(text);
+          }}
+        />
+        {checkValidEmail ? (
+          <Text style={styles.cautionStyle}>Not an valid email!</Text>
+        ) : (
+          <Text></Text>
+        )}
+        <View
+          style={[
+            {
+              flexDirection: "row",
+              alignContent: "space-between",
+              width: "100%",
+            },
+          ]}
+        >
+          <TextInput
+            style={[
+              styles.generalTextfieldStyle,
+              { borderColor: theme.tertiary },
+            ]}
+            placeholder="Enter password"
+            secureTextEntry={seePassword}
+            value={password}
+            onChangeText={(text) => handlePasswordChecker(text)}
+          />
+          {seePassword ? (
+            <TouchableOpacity
+              onPress={() => {
+                setSeePassword(!seePassword);
+              }}
+            >
+              <Image
+                source={require("../../assets/invisible.png")}
+                style={styles.iconEye}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                setSeePassword(!seePassword);
+              }}
+            >
+              <Image
+                source={require("../../assets/visible.png")}
+                style={styles.iconEye}
+              />
+            </TouchableOpacity>
+          )}
         </View>
-      </TouchableOpacity>
+        {checkPasswordValid ? (
+          <Text style={styles.cautionStyle}>
+            Password should contain atleast one uppercase letter, one lowercase
+            letter, and one number
+          </Text>
+        ) : (
+          <Text></Text>
+        )}
 
-      <View style={{ flexDirection: "row", padding: 10 }}>
-        <Text>Already a user? </Text>
         <TouchableOpacity
           onPress={() => {
-            router.navigate("./LogInScreen");
+            if (
+              password.length > 1 &&
+              nameOfUser.length > 1 &&
+              email.length > 1
+            ) {
+              handleSignIn(auth, email, password, nameOfUser);
+            } else {
+              alert("Not a valid entry");
+            }
           }}
         >
-          <Text style={{ color: theme.accent }}>Log in</Text>
+          <View style={[styles.buttonStyle, { backgroundColor: theme.accent }]}>
+            <Text style={{ color: "white" }}>Sign up</Text>
+          </View>
         </TouchableOpacity>
+
+        <View style={{ flexDirection: "row", padding: 10 }}>
+          <Text>Already a user? </Text>
+          <TouchableOpacity
+            onPress={() => {
+              router.navigate("./LogInScreen");
+            }}
+          >
+            <Text style={{ color: theme.accent }}>Log in</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -226,8 +302,8 @@ export default SignUpScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    height: "100%",
+    width: "100%",
     padding: "5%",
   },
   generalTextfieldStyle: {
