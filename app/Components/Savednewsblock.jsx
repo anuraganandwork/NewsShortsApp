@@ -67,14 +67,14 @@ const Savednewsblock = ({ title, url, onDelete, onRead, urlToImage }) => {
           >
             <Text style={{ color: "white" }}>Read</Text>
           </TouchableOpacity>
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               onDelete();
             }}
             style={[styles.buttonStyleSecondary, { borderColor: theme.accent }]}
           >
             <Text>Delete</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

@@ -15,6 +15,7 @@ import MySnackbar from "./MySnackbar";
 import { Button } from "react-native-paper";
 import { shareNews } from "./SharingFeature";
 import { color } from "../Constants/AppTheme";
+import parse from "html-react-parser";
 export interface NewsCardItem {
   title: string;
   publishedAt: string;
@@ -74,6 +75,7 @@ const Card: React.FC<cardComponent> = (props) => {
       // Error saving data
     }
   };
+  const regex = /<[^>]*>|\[[^\]]*\]/g;
 
   // sharing feature enabling
 
@@ -81,7 +83,7 @@ const Card: React.FC<cardComponent> = (props) => {
   if (!(title && urlToImage && publishedAt && content)) {
     return null;
   }
-
+  const parsedText = parse(content);
   return (
     <View style={[styles.cardStyle]}>
       <View
@@ -97,14 +99,14 @@ const Card: React.FC<cardComponent> = (props) => {
           }}
           numberOfLines={6}
         >
-          {content}
+          {content.replace(regex, "")}
         </Text>
 
         <View style={styles.dateANDTime}>
-          <Text style={{ paddingStart: 10, paddingTop: 10 }}>
+          <Text style={{ paddingStart: 10, paddingTop: 10, fontSize: 12 }}>
             {publishedAt.substring(11, 16)}
           </Text>
-          <Text style={{ paddingStart: 10, paddingTop: 10 }}>
+          <Text style={{ paddingStart: 10, paddingTop: 10, fontSize: 12 }}>
             {publishedAt.substring(0, 10)}
           </Text>
         </View>
@@ -147,7 +149,7 @@ const Card: React.FC<cardComponent> = (props) => {
               <TouchableOpacity
                 onPress={() => {
                   setIsSpeaking(true);
-                  Speech.speak(content);
+                  Speech.speak(content.replace(regex, ""));
                 }}
               >
                 <Image

@@ -7,6 +7,7 @@ export const color = {
     accent: "#0891b2",
     tint: "#111827",
     SeconDaryBG: "#bfcfff",
+    secondaryText: "#D3D3D3	",
   },
   dark: {
     //primary: "#070321",
@@ -16,5 +17,6 @@ export const color = {
     accent: "#0891b2",
     tint: "#f9fafb",
     SeconDaryBG: "#22223b",
+    secondaryText: "#D3D3D3	",
   },
 };

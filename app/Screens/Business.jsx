@@ -10,6 +10,7 @@ import {
   Modal,
   Linking,
   useColorScheme,
+  SafeAreaViewComponent,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
@@ -24,7 +25,8 @@ import MyElevatedButton from "../Components/MyElevatedButton";
 import MySnackbar from "../Components/MySnackbar";
 import Savednewsblock from "../Components/Savednewsblock";
 import { color } from "../Constants/AppTheme";
-
+import SavedModal from "../Components/SavedModal";
+import { parse } from "html-react-parser";
 const Business = () => {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [newsdataH, setnewsdataH] = useState([]);
@@ -106,7 +108,7 @@ const Business = () => {
         )}
         keyExtractor={({ item }) => item?.title || Math.random().toString()}
       />
-      <Pressable
+      <TouchableOpacity
         onPress={() => {
           setIsModalVisible(true);
           getData();
@@ -121,85 +123,14 @@ const Business = () => {
         >
           <Text>Saved News</Text>
         </View>
-      </Pressable>
+      </TouchableOpacity>
 
-      <Modal
-        visible={isModalVisiblle}
-        onRequestClose={() => {
-          setIsModalVisible(false);
-        }}
-        animationType="slide"
-      >
-        <View
-          style={{
-            height: "100%",
-            justifyContent: "flex-end",
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: theme.primary,
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                width: "100%",
-                justifyContent: "space-between",
-                alignItems: "center",
-                paddingRight: "3%",
-              }}
-            >
-              <Text
-                style={{
-                  marginTop: "5%",
-                  fontSize: 25,
-                  fontWeight: 500,
-                  marginBottom: "2%",
-                  marginLeft: "2%",
-                }}
-              >
-                Saved news
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  setIsModalVisible(false);
-                }}
-              >
-                <View
-                  style={{
-                    paddingVertical: 5,
-                    paddingHorizontal: 12,
-                    backgroundColor: theme.primary,
-                    borderColor: theme.accent,
-                    borderWidth: 1,
-                    elevation: 10,
-                    borderRadius: 50,
-                    marginTop: "5%",
-                  }}
-                >
-                  <Text>Close</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <FlatList
-              data={titleFromDatabase}
-              renderItem={({ item }) => {
-                return (
-                  <Savednewsblock
-                    title={item.title}
-                    url={item.url}
-                    urlToImage={item.urlToImage}
-                    onDelete={() => delete_news(item.title)}
-                    onRead={() => read_news(item.url)}
-                  />
-                );
-              }}
-            />
-          </View>
-        </View>
-      </Modal>
+      <SavedModal
+        Visibility={[isModalVisiblle, setIsModalVisible]}
+        myObject={titleFromDatabase}
+        delete_news={delete_news}
+        read_news={read_news}
+      />
     </View>
   );
 };
